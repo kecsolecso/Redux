@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Redux basic example</title>
+    <script src="https://unpkg.com/redux@latest/dist/redux.min.js"></script>
+</head>
+
+<body>
+    Clicked:
+    <button id="increment">+</button>
+    <button id="decrement">-</button>
+    <div id="content" /> times
+    <script> 
+        const defaultState = { counter: 1 };
+        const { createStore, applyMiddleware, compose } = window.Redux;
+        const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__;
+
+        function counter(state = {counter: 0}, action) {
+            switch (action.type) {
+                case 'INCREMENT': return {...state, counter: state.counter +1}
+                case 'DECREMENT': return {...state, counter: state.counter -1}
+                default: return state;
+            }
+        }
+
+        const store = createStore(counter, defaultState, composeEnhancers());
+
+
+        const content = document.getElementById('content');
+
+        const render = () => {
+            content.innerHTML = store.getState().counter;
+        }
+
+        render();
+
+        store.subscribe(render);
+
+        document.getElementById('increment')
+            .addEventListener('click', function () {
+                store.dispatch({ type: 'INCREMENT' })
+            })
+        document.getElementById('decrement')
+            .addEventListener('click', function () {
+                store.dispatch({ type: 'DECREMENT' })
+            })
+    </script>
+</body>
+
+</html>
