@@ -7,16 +7,19 @@
 </head>
 
 <body>
-    Clicked:
+    Click here:
     <button id="increment">+</button>
     <button id="decrement">-</button>
-    <div id="content" /> times
+    <div id="content" />
     <script> 
         const defaultState = { counter: 1 };
-        const { createStore, applyMiddleware, compose } = window.Redux;
+        const { createStore} = window.Redux;
         const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__;
 
-        function counter(state = {counter: 0}, action) {
+        const getIncrementAction = () => ({ type: 'INCREMENT' });
+        const getDecrementAction = () => ({ type: 'DECREMENT' });
+
+        function counterReducer(state = {counter: 0}, action) {
             switch (action.type) {
                 case 'INCREMENT': return {...state, counter: state.counter +1}
                 case 'DECREMENT': return {...state, counter: state.counter -1}
@@ -24,8 +27,7 @@
             }
         }
 
-        const store = createStore(counter, defaultState, composeEnhancers());
-
+        const store = createStore(counterReducer, defaultState, composeEnhancers());
 
         const content = document.getElementById('content');
 
@@ -37,15 +39,8 @@
 
         store.subscribe(render);
 
-        document.getElementById('increment')
-            .addEventListener('click', function () {
-                store.dispatch({ type: 'INCREMENT' })
-            })
-        document.getElementById('decrement')
-            .addEventListener('click', function () {
-                store.dispatch({ type: 'DECREMENT' })
-            })
+        document.getElementById('increment').addEventListener('click', () => store.dispatch(getIncrementAction()))
+        document.getElementById('decrement').addEventListener('click', () => store.dispatch(getDecrementAction()))
     </script>
 </body>
-
 </html>

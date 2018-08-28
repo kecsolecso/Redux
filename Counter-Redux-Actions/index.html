@@ -1,0 +1,43 @@
+<!doctype html>
+<html>
+
+<head>
+    <meta charset="utf-8" />
+    <title>Redux-actions basic example</title>
+    <script src="https://unpkg.com/redux@latest/dist/redux.js"></script>
+    <script src="https://unpkg.com/redux-actions@latest/dist/redux-actions.js"></script>
+</head>
+
+<body>
+    Click here:
+    <button id="increment">+</button>
+    <button id="decrement">-</button>
+    <div id="content" />
+    <script>
+        const defaultState = { counter: 0 };
+        const { createStore } = window.Redux;
+        const { createActions, handleActions } = window.ReduxActions;
+        const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__;
+
+        const {increment: getIncrementAction, decrement: getDecrementAction} = createActions('INCREMENT', 'DECREMENT');
+
+        const counterReducer = handleActions({
+            [getIncrementAction]: (state, action) => ({ ...state, counter: state.counter + 1 }),
+            [getDecrementAction]: (state, action) => ({ ...state, counter: state.counter - 1 }),
+            },
+            defaultState
+        );
+
+        const store = createStore(counterReducer, defaultState, composeEnhancers());
+
+        const content = document.getElementById('content');
+        const render = () => content.innerHTML = store.getState().counter;
+        render();
+        store.subscribe(render);
+
+        document.querySelector('#increment').addEventListener('click', () => store.dispatch(getIncrementAction()))
+        document.querySelector('#decrement').addEventListener('click', () => store.dispatch(getDecrementAction()))
+    </script>
+</body>
+
+</html>
